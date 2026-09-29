@@ -2,7 +2,7 @@
 // SISTEMA DE NOTAS MARKDOWN
 // ============================================
 
-const STORAGE_KEY = 'markdown-notes';
+const STORAGE_KEY = "markdown-notes";
 let currentNoteId = null;
 
 // --------------------------------------------
@@ -15,23 +15,23 @@ let currentNoteId = null;
  * @returns {string} Título derivado del contenido
  */
 function deriveTitle(content) {
-  if (content === '' || content === null || content === undefined) {
-    return 'Sin título';
+  if (content === "" || content === null || content === undefined) {
+    return "Sin título";
   }
 
   const cleanContent = content.trim();
 
-  if (cleanContent === '') {
-    return 'Sin título';
+  if (cleanContent === "") {
+    return "Sin título";
   }
 
-  let firstLine = '';
+  let firstLine = "";
   let foundNewLine = false;
 
   for (let i = 0; i < cleanContent.length; i = i + 1) {
     const char = cleanContent[i];
 
-    if (char === '\n') {
+    if (char === "\n") {
       foundNewLine = true;
       break;
     }
@@ -39,12 +39,12 @@ function deriveTitle(content) {
     firstLine = firstLine + char;
   }
 
-  if (firstLine.trim() === '') {
-    return 'Sin título';
+  if (firstLine.trim() === "") {
+    return "Sin título";
   }
 
   if (firstLine.length > 50) {
-    firstLine = firstLine.slice(0, 50) + '...';
+    firstLine = firstLine.slice(0, 50) + "...";
   }
 
   return firstLine.trim();
@@ -57,8 +57,8 @@ function deriveTitle(content) {
  * @returns {string} Resumen del contenido
  */
 function deriveExcerpt(content, maxLen) {
-  if (content === '' || content === null || content === undefined) {
-    return '';
+  if (content === "" || content === null || content === undefined) {
+    return "";
   }
 
   let maxLength = maxLen;
@@ -72,7 +72,7 @@ function deriveExcerpt(content, maxLen) {
     return cleanContent;
   }
 
-  const excerpt = cleanContent.slice(0, maxLength) + '...';
+  const excerpt = cleanContent.slice(0, maxLength) + "...";
 
   return excerpt;
 }
@@ -103,7 +103,7 @@ function generateId() {
 function createNote(content, title) {
   const trimmedContent = content.trim();
 
-  if (trimmedContent === '') {
+  if (trimmedContent === "") {
     return null;
   }
 
@@ -112,7 +112,7 @@ function createNote(content, title) {
   const currentTime = Date.now();
 
   let noteTitle = title;
-  if (noteTitle === undefined || noteTitle === null || noteTitle === '') {
+  if (noteTitle === undefined || noteTitle === null || noteTitle === "") {
     noteTitle = deriveTitle(content);
   }
 
@@ -137,7 +137,7 @@ function createNote(content, title) {
  */
 function saveToStorage(notes) {
   if (notes === undefined || notes === null) {
-    console.error('No se pueden guardar notas: Datos inválidos');
+    console.error("No se pueden guardar notas: Datos inválidos");
     return;
   }
   const notesJSON = JSON.stringify(notes);
@@ -179,14 +179,14 @@ function createPersistentNotesStore() {
    * @returns {Object} Resultado de la operación
    */
   function addNote(content, title) {
-    if (content === undefined || content === null || content.trim() === '') {
-      return { success: false, message: 'El contenido no puede estar vacío' };
+    if (content === undefined || content === null || content.trim() === "") {
+      return { success: false, message: "El contenido no puede estar vacío" };
     }
 
     const newNote = createNote(content, title);
 
     if (newNote === null) {
-      return { success: false, message: 'Error al crear la nota' };
+      return { success: false, message: "Error al crear la nota" };
     }
 
     notes.push(newNote);
@@ -235,7 +235,7 @@ function createPersistentNotesStore() {
    */
   function updateNote(noteId, updates) {
     if (noteId === undefined || noteId === null) {
-      return { success: false, message: 'ID inválido' };
+      return { success: false, message: "ID inválido" };
     }
 
     const noteToUpdate = notes.find(function (note) {
@@ -243,14 +243,14 @@ function createPersistentNotesStore() {
     });
 
     if (noteToUpdate === undefined) {
-      return { success: false, message: 'Nota no encontrada' };
+      return { success: false, message: "Nota no encontrada" };
     }
 
     if (updates.content !== undefined) {
       const trimmedContent = updates.content.trim();
 
-      if (trimmedContent === '') {
-        return { success: false, message: 'El contenido no puede estar vacío' };
+      if (trimmedContent === "") {
+        return { success: false, message: "El contenido no puede estar vacío" };
       }
 
       noteToUpdate.content = updates.content;
@@ -258,7 +258,7 @@ function createPersistentNotesStore() {
       noteToUpdate.excerpt = deriveExcerpt(updates.content, 100);
     }
 
-    if (updates.title !== undefined && updates.title !== '') {
+    if (updates.title !== undefined && updates.title !== "") {
       noteToUpdate.title = updates.title;
     }
 
@@ -279,7 +279,7 @@ function createPersistentNotesStore() {
    */
   function deleteNote(noteId) {
     if (noteId === undefined || noteId === null) {
-      return { success: false, message: 'ID inválido' };
+      return { success: false, message: "ID inválido" };
     }
 
     const initialLength = notes.length;
@@ -289,12 +289,12 @@ function createPersistentNotesStore() {
     });
 
     if (notes.length === initialLength) {
-      return { success: false, message: 'Nota no encontrada' };
+      return { success: false, message: "Nota no encontrada" };
     }
 
     saveToStorage(notes);
 
-    return { success: true, message: 'Nota eliminada exitosamente' };
+    return { success: true, message: "Nota eliminada exitosamente" };
   }
 
   /**
@@ -303,7 +303,7 @@ function createPersistentNotesStore() {
    * @returns {Array} Notas que coinciden con la búsqueda
    */
   function searchNotes(query) {
-    if (query === undefined || query === null || query.trim() === '') {
+    if (query === undefined || query === null || query.trim() === "") {
       return [];
     }
 
@@ -379,22 +379,22 @@ function createPersistentNotesStore() {
  * Muestra el editor y el preview
  */
 function showEditorAndPreview() {
-  const editorSection = document.querySelector('#editor-section');
-  const previewSection = document.querySelector('#preview-section');
+  const editorSection = document.querySelector("#editor-section");
+  const previewSection = document.querySelector("#preview-section");
 
-  editorSection.style.display = 'flex';
-  previewSection.style.display = 'flex';
+  editorSection.style.display = "flex";
+  previewSection.style.display = "flex";
 }
 
 /**
  * Oculta el editor y el preview
  */
 function hideEditorAndPreview() {
-  const editorSection = document.querySelector('#editor-section');
-  const previewSection = document.querySelector('#preview-section');
+  const editorSection = document.querySelector("#editor-section");
+  const previewSection = document.querySelector("#preview-section");
 
-  editorSection.style.display = 'none';
-  previewSection.style.display = 'none';
+  editorSection.style.display = "none";
+  previewSection.style.display = "none";
 }
 
 /**
@@ -402,38 +402,38 @@ function hideEditorAndPreview() {
  * @param {Array} notes - Array de notas a renderizar
  */
 function renderNoteList(notes) {
-  const noteListContainer = document.querySelector('#note-list');
+  const noteListContainer = document.querySelector("#note-list");
 
-  noteListContainer.innerHTML = '';
+  noteListContainer.innerHTML = "";
 
   if (notes.length === 0) {
-    const emptyMessage = document.createElement('p');
-    emptyMessage.textContent = 'No hay notas. Crea tu primera nota.';
-    emptyMessage.className = 'empty-message';
+    const emptyMessage = document.createElement("p");
+    emptyMessage.textContent = "No hay notas. Crea tu primera nota.";
+    emptyMessage.className = "empty-message";
     noteListContainer.append(emptyMessage);
     return;
   }
 
   notes.forEach(function (note) {
-    const noteItem = document.createElement('div');
-    noteItem.className = 'note-item';
+    const noteItem = document.createElement("div");
+    noteItem.className = "note-item";
     noteItem.dataset.id = note.id;
 
     if (currentNoteId === note.id) {
-      noteItem.className = 'note-item active';
+      noteItem.className = "note-item active";
     }
 
-    const noteTitle = document.createElement('h3');
+    const noteTitle = document.createElement("h3");
     noteTitle.textContent = note.title;
 
-    const noteExcerpt = document.createElement('p');
+    const noteExcerpt = document.createElement("p");
     noteExcerpt.textContent = note.excerpt;
-    noteExcerpt.className = 'note-excerpt';
+    noteExcerpt.className = "note-excerpt";
 
-    const noteDate = document.createElement('small');
+    const noteDate = document.createElement("small");
     const date = new Date(note.updatedAt);
     noteDate.textContent = date.toLocaleDateString();
-    noteDate.className = 'note-date';
+    noteDate.className = "note-date";
 
     noteItem.append(noteTitle);
     noteItem.append(noteExcerpt);
@@ -448,7 +448,7 @@ function renderNoteList(notes) {
  * @param {Object|null} note - Nota a renderizar o null para editor vacío
  */
 function renderEditor(note) {
-  const editorTextarea = document.querySelector('#editor-textarea');
+  const editorTextarea = document.querySelector("#editor-textarea");
 
   if (note !== null && note !== undefined) {
     showEditorAndPreview();
@@ -456,7 +456,7 @@ function renderEditor(note) {
     currentNoteId = note.id;
   } else {
     showEditorAndPreview();
-    editorTextarea.value = '';
+    editorTextarea.value = "";
     currentNoteId = null;
   }
 
@@ -468,7 +468,7 @@ function renderEditor(note) {
  * @param {String} content - El contenido de l anota
  */
 function renderMarkdown(content) {
-  if (typeof window.markdownit != 'undefined') {
+  if (typeof window.markdownit != "undefined") {
     const md = window.markdownit();
     return md.render(content);
   }
@@ -479,14 +479,14 @@ function renderMarkdown(content) {
  * @param {string} content - Contenido Markdown a renderizar
  */
 function renderPreview(content) {
-  const previewContainer = document.querySelector('#preview-container');
+  const previewContainer = document.querySelector("#preview-container");
 
-  previewContainer.innerHTML = '';
+  previewContainer.innerHTML = "";
 
-  if (content === '' || content === null || content === undefined) {
-    const emptyMessage = document.createElement('p');
-    emptyMessage.textContent = 'El preview aparecerá aquí...';
-    emptyMessage.className = 'preview-empty';
+  if (content === "" || content === null || content === undefined) {
+    const emptyMessage = document.createElement("p");
+    emptyMessage.textContent = "El preview aparecerá aquí...";
+    emptyMessage.className = "preview-empty";
     previewContainer.append(emptyMessage);
     return;
   }
@@ -501,19 +501,19 @@ function renderPreview(content) {
  * @param {boolean} isError - true si es error, false si es éxito
  */
 function showMessage(message, isError) {
-  const messageContainer = document.querySelector('#message-container');
+  const messageContainer = document.querySelector("#message-container");
 
   messageContainer.textContent = message;
 
   if (isError === true) {
-    messageContainer.className = 'message error';
+    messageContainer.className = "message error";
   } else {
-    messageContainer.className = 'message success';
+    messageContainer.className = "message success";
   }
 
   setTimeout(() => {
-    messageContainer.textContent = '';
-    messageContainer.className = 'message';
+    messageContainer.textContent = "";
+    messageContainer.className = "message";
   }, 3000);
 }
 
@@ -522,20 +522,20 @@ function showMessage(message, isError) {
  * @param {Object} store - Store de notas
  */
 function initializeEventLIsteners(store) {
-  const newNoteButton = document.querySelector('#new-note-button');
+  const newNoteButton = document.querySelector("#new-note-button");
 
-  newNoteButton.addEventListener('click', () => {
+  newNoteButton.addEventListener("click", () => {
     renderEditor(null);
   });
 
-  const saveNoteButton = document.querySelector('#save-note-button');
+  const saveNoteButton = document.querySelector("#save-note-button");
 
-  saveNoteButton.addEventListener('click', () => {
-    const editorTextArea = document.querySelector('#editor-textarea');
+  saveNoteButton.addEventListener("click", () => {
+    const editorTextArea = document.querySelector("#editor-textarea");
     const content = editorTextArea.value;
 
-    if (content.trim() === '') {
-      showMessage('El contenido no puede estar vacío', true);
+    if (content.trim() === "") {
+      showMessage("El contenido no puede estar vacío", true);
       return;
     }
 
@@ -543,7 +543,7 @@ function initializeEventLIsteners(store) {
       const result = store.updateNote(currentNoteId, { content: content });
 
       if (result.success === true) {
-        showMessage('Nota actiualizada Exitosamente', false);
+        showMessage("Nota actiualizada Exitosamente", false);
         const notes = store.getNotesOrderedByDate();
         renderNoteList(notes);
       } else {
@@ -553,7 +553,7 @@ function initializeEventLIsteners(store) {
       const result = store.addNote(content);
 
       if (result.success === true) {
-        showMessage('Nota creada exitosamente', false);
+        showMessage("Nota creada exitosamente", false);
         currentNoteId = result?.note?.id;
         const notes = store.getNotesOrderedByDate();
         renderNoteList(notes);
@@ -563,20 +563,20 @@ function initializeEventLIsteners(store) {
     }
   });
 
-  const deleteNoteButton = document.querySelector('#delete-note-button');
+  const deleteNoteButton = document.querySelector("#delete-note-button");
 
-  deleteNoteButton.addEventListener('click', () => {
+  deleteNoteButton.addEventListener("click", () => {
     if (currentNoteId === null) {
-      showMessage('No hay una nota seleccionada para eliminar', true);
+      showMessage("No hay una nota seleccionada para eliminar", true);
     }
 
-    const confirmed = confirm('¿Estás seguro de eliminar esta nota?');
+    const confirmed = confirm("¿Estás seguro de eliminar esta nota?");
 
     if (confirmed === true) {
       const result = store.deleteNote(currentNoteId);
 
       if (result.success === true) {
-        showMessage('Nota Eliinada exitosamente', false);
+        showMessage("Nota Eliinada exitosamente", false);
         hideEditorAndPreview();
         currentNoteId = null;
         const notes = store.getNotesOrderedByDate();
@@ -587,16 +587,17 @@ function initializeEventLIsteners(store) {
     }
   });
 
-  const editorTextarea = document.querySelector('#editor-textarea');
-  editorTextarea.addEventListener('input', () => {
+  const editorTextarea = document.querySelector("#editor-textarea");
+  editorTextarea.addEventListener("input", () => {
     const content = editorTextarea.value;
     renderPreview(content);
   });
 
-  const noteListContainer = document.querySelector('#note-list');
+  const noteListContainer = document.querySelector("#note-list");
 
-  noteListContainer.addEventListener('click', () => {
-    const noteItem = event.target.closest('.note-item');
+  //agregué un event listener para manejar el click en los elementos de la lista de notas
+  noteListContainer.addEventListener("click", (event) => {
+    const noteItem = event.target.closest(".note-item");
 
     if (noteItem != null) {
       const noteId = Number(noteItem.dataset.id);
@@ -609,6 +610,15 @@ function initializeEventLIsteners(store) {
       }
     }
   });
+
+  //agregué un event listener para manejar el click en el botón de eliminar nota
+  deleteNoteButton.addEventListener('click', () => {
+  if (currentNoteId === null) {
+    showMessage('No hay una nota seleccionada para eliminar', true);
+    return; // 👈 corta la función aquí: no debe seguir al confirm()
+  }
+  // ...resto igual
+});
 }
 
 /**
@@ -623,10 +633,10 @@ function initialzeApp() {
 
   initializeEventLIsteners(store);
 
-  console.log('Aplicación inicializada correctamente');
-  console.log('Total de notas cargadas:', store.getNotesCount());
+  console.log("Aplicación inicializada correctamente");
+  console.log("Total de notas cargadas:", store.getNotesCount());
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   initialzeApp();
 });
